@@ -242,13 +242,23 @@ typedef unsigned int JDIMENSION;
 #define METHODDEF(type)		static type
 /* a function used only in its module: */
 #define LOCAL(type)		static type
+#ifdef __EMSCRIPTEN__
 /* a function referenced thru EXTERNs: */
 #define GLOBAL(type)		type
 /* a reference to a GLOBAL function: */
-#ifdef __EMSCRIPTEN__
 #define EXTERN(type)		extern type
 #else
+#ifdef JPEG_DLL_BUILD
+/* a function referenced thru EXTERNs: */
+#define GLOBAL(type)		__declspec(dllexport) type
+/* a reference to a GLOBAL function: */
 #define EXTERN(type)		extern __declspec(dllexport) type
+#else
+/* a function referenced thru EXTERNs: */
+#define GLOBAL(type)		__declspec(dllimport) type
+/* a reference to a GLOBAL function: */
+#define EXTERN(type)		extern __declspec(dllimport) type
+#endif
 #endif
 
 
